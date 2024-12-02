@@ -16,7 +16,11 @@ def user_route(request):
         return JsonResponse(serializer.data, safe=False)
     if request.method == 'POST':
         data = json.loads(request.body)
-        serializer = UserSerializer(data=data)
+        name = data.get("name")
+        username = data.get("username")
+        balance = data.get("balance")
+        user = User.objects.create(name=name, username=username, balance=balance)
+        serializer = UserSerializer(user, many = False)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data) 
